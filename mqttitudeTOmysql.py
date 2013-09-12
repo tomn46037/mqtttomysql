@@ -5,19 +5,17 @@
 # Simple Python script (v2.7x) that subscribes to a MQTT broker topic and inserts the topic into a mysql database
 # This is designed for the http://mqttitude.org/ project backend
 #
-# Issues are :
-# -- date and time tst field, need to convert it to mysql datetime stamp from EPOCH timestamp
-# -- need to add the topic /test/location to the database not sure how to pull that part out
 
 import MySQLdb
 import mosquitto
 import json
+import time
 
 #mosquitto broker config
 broker = 'mqtt.localdomain'
 broker_port = 1883
 broker_topic = '/test/location/#'
-broker_clientid = 'mqttuide2mysqlScript'
+#broker_clientid = 'mqttuide2mysqlScript'
 #mysql config
 mysql_server = 'thebeast.localdomain'
 mysql_username = 'root'
@@ -42,15 +40,31 @@ def on_message(mosq, obj, msg):
     list = json.loads(msg.payload)
     
     for key,value in list.iteritems():
+      print ("")
+      print key, value
+      if key == 'tst':
+        print "time found"
+        print value
+        value = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(value)))
+        print value
+        
       value_type = type(value)
       if value_type is not dict:
+        print "value_type is not dict"
         if value_type is unicode:
+          print "value_type is unicode"
           vars_to_sql.append(value.encode('ascii', 'ignore'))
           keys_to_sql.append(key.encode('ascii', 'ignore'))
         else:
+          print "value_type is not unicode"
           vars_to_sql.append(value)
           keys_to_sql.append(key)
-     
+    #add the msg.topic to the list as well
+    print "topic", msg.topic
+    addtopic = 'topic'
+    vars_to_sql.append(msg.topic.encode('ascii', 'ignore'))
+    keys_to_sql.append(addtopic.encode('ascii', 'ignore'))
+    
     keys_to_sql = ', '.join(keys_to_sql)
 
     try:
@@ -80,7 +94,7 @@ def on_log(mosq, obj, level, string):
     print(string)
 
 # If you want to use a specific client id, use
-mqttc = mosquitto.Mosquitto(broker_clientid)
+#mqttc = mosquitto.Mosquitto(broker_clientid)
 # but note that the client id must be unique on the broker. Leaving the client
 # id parameter empty will generate a random id for you.
 mqttc = mosquitto.Mosquitto()
@@ -90,6 +104,7 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 mqttc.on_log = on_log
+
 mqttc.connect(broker, broker_port, 60)
 mqttc.subscribe(broker_topic, 0)
 
