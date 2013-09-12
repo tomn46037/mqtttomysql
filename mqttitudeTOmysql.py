@@ -8,7 +8,6 @@
 # Issues are :
 # -- date and time tst field, need to convert it to mysql datetime stamp from EPOCH timestamp
 # -- need to add the topic /test/location to the database not sure how to pull that part out
-# -- add the mqtt on_MSG part, this is easy, just trying to get the backend mysql part to work first.
 
 import MySQLdb
 import mosquitto
