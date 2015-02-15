@@ -11,7 +11,7 @@ import mosquitto
 import json
 import time
 
-config = json.load(open('./mqttitudeTOmysql.conf'))
+config = json.load(open('./mqttTOmysql.conf'))
 
 broker_topic = '#'
 
@@ -52,7 +52,7 @@ def on_subscribe(mosq, obj, mid, granted_qos):
 def on_log(mosq, obj, level, string):
     if config['debug']: print(string)
 
-mqttc = mosquitto.Mosquitto(config['broker_clientid'], clean_session=True )
+mqttc = mosquitto.Mosquitto(config['broker_clientid'], clean_session=config['broker_clean_session'] )
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish

@@ -1,15 +1,16 @@
 {
 
- "debug"           : 0,
- "broker"          : "broker.host.name",
- "broker_port"     : 1883,
- "broker_username" : "mqttlogger",
- "broker_password" : "PASSWORD",
- "broker_clientid" : "mqttTOmysql",
- "mysql_server"    : "127.0.0.1",
- "mysql_username"  : "mqttlogger",
- "mysql_passwd"    : "OTHERPASSWORD",
- "mysql_db"        : "mqtt",
- "mysql_table"     : "messages"
+ "debug"                : 0,
+ "broker"               : "broker.host.name",
+ "broker_port"          : 1883,
+ "broker_username"      : "mqttlogger",
+ "broker_password"      : "PASSWORD",
+ "broker_clientid"      : "mqttTOmysql",
+ "broker_clean_session" : 0,
+ "mysql_server"         : "127.0.0.1",
+ "mysql_username"       : "mqttlogger",
+ "mysql_passwd"         : "OTHERPASSWORD",
+ "mysql_db"             : "mqtt",
+ "mysql_table"          : "messages"
 
 }
